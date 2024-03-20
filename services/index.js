@@ -6,12 +6,33 @@ const fs = require("fs");
 const readFileAsync = promisify(fs.readFile);
 
 class service {
+   async findAllData(){
+      try {
+      const sql =
+        "SELECT * FROM parking_details;";
+        return new Promise((resolve, reject) => {
+         model.query(sql, (err, result) => {
+           if (err) {
+             console.error("Error executing MySQL query:", err);
+             reject("Internal Server Error");
+           } else {
+             console.log("Data fetched successfully");
+             resolve(result);
+           }
+         });
+       });
+      }  catch (error) {
+         console.error("Error in fetching data:", error);
+         throw "Internal Server Error";
+       }
+   }
+
   async createData(data) {
     try {
       const { name, address, area, mobile, base64Image } = data;
 
       const sql =
-        "INSERT INTO parking_details (name, address, area, mobile, image_data) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO parking_details (name, address, area, mobile, base64Image) VALUES (?, ?, ?, ?, ?)";
       const params = [name, address, area, mobile, base64Image];
 
       return new Promise((resolve, reject) => {
@@ -36,7 +57,7 @@ class service {
    try {
       const { name, address, area, mobile, base64Image } = newData;
 
-      const sql = 'UPDATE parking_details SET name=?, address=?, area=?, mobile=?, image_data=? WHERE id=?';
+      const sql = 'UPDATE parking_details SET name=?, address=?, area=?, mobile=?, base64Image=? WHERE id=?';
       const params = [name, address, area, mobile, base64Image, id];
 
       return new Promise((resolve, reject) => {

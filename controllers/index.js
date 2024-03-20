@@ -2,6 +2,17 @@
 const services = require("../services/index.js");
 
 class controller {
+
+   async findAllData(req, res){
+      try {
+         const data = await services.findAllData();
+         res.status(200).json({ message: "All data fetched successfully", data:data });
+       } catch (error) {
+         console.error("Error in fetching data:", error);
+         res.status(500).json({ error: "Internal Server Error" });
+       }
+   }
+
   async createData(req, res) {
     try {
       const { name, address, area, mobile, base64Image } = req.body;
